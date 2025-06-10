@@ -21,9 +21,11 @@ use Omnipay\Common\Message\RequestInterface;
 final class Gateway extends AbstractGateway implements GatewayInterface
 {
     const API_VERSION_EUROPE = 'EU';
+
     const API_VERSION_NORTH_AMERICA = 'NA';
 
     const EU_BASE_URL = 'https://api.klarna.com';
+    const EU_KUSTOM_URL = 'https://api.custom.co';
     const EU_TEST_BASE_URL = 'https://api.playground.klarna.com';
     const NA_BASE_URL = 'https://api-na.klarna.com';
     const NA_TEST_BASE_URL = 'https://api-na.playground.klarna.com';
@@ -244,11 +246,22 @@ final class Gateway extends AbstractGateway implements GatewayInterface
     private function setBaseUrl()
     {
         if (self::API_VERSION_EUROPE === $this->getApiRegion()) {
+
             $this->parameters->set('base_url', $this->getTestMode() ? self::EU_TEST_BASE_URL : self::EU_BASE_URL);
 
             return;
         }
 
+
         $this->parameters->set('base_url', $this->getTestMode() ? self::NA_TEST_BASE_URL : self::NA_BASE_URL);
+    }
+    public function setBaseKustomUrl()
+    {
+        if (self::API_VERSION_EUROPE === $this->getApiRegion()) {
+
+            $this->parameters->set('base_url', $this->getTestMode() ? self::EU_TEST_BASE_URL : self::EU_KUSTOM_URL);
+
+            return;
+        }
     }
 }
