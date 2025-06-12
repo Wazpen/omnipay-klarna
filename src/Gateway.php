@@ -246,22 +246,15 @@ final class Gateway extends AbstractGateway implements GatewayInterface
     private function setBaseUrl()
     {
         if (self::API_VERSION_EUROPE === $this->getApiRegion()) {
-
-            $this->parameters->set('base_url', $this->getTestMode() ? self::EU_TEST_BASE_URL : self::EU_BASE_URL);
+            if(str_starts_with('M', $this->getUsername())) {
+                $this->parameters->set('base_url', $this->getTestMode() ? self::EU_TEST_BASE_URL : self::EU_KUSTOM_URL);
+            } else {
+                $this->parameters->set('base_url', $this->getTestMode() ? self::EU_TEST_BASE_URL : self::EU_BASE_URL);
+            }
 
             return;
         }
-
 
         $this->parameters->set('base_url', $this->getTestMode() ? self::NA_TEST_BASE_URL : self::NA_BASE_URL);
-    }
-    public function setBaseKustomUrl()
-    {
-        if (self::API_VERSION_EUROPE === $this->getApiRegion()) {
-
-            $this->parameters->set('base_url', $this->getTestMode() ? self::EU_TEST_BASE_URL : self::EU_KUSTOM_URL);
-
-            return;
-        }
     }
 }
