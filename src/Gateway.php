@@ -25,7 +25,9 @@ final class Gateway extends AbstractGateway implements GatewayInterface
     const API_VERSION_NORTH_AMERICA = 'NA';
 
     const EU_BASE_URL = 'https://api.klarna.com';
-    const EU_KUSTOM_URL = 'https://api.custom.co';
+    const EU_KUSTOM_BASE_URL = 'https://api.kustom.co';
+
+    const EU_TEST_KUSTOM_BASE_URL = 'https://api.playground.kustom.co';
     const EU_TEST_BASE_URL = 'https://api.playground.klarna.com';
     const NA_BASE_URL = 'https://api-na.klarna.com';
     const NA_TEST_BASE_URL = 'https://api-na.playground.klarna.com';
@@ -243,15 +245,28 @@ final class Gateway extends AbstractGateway implements GatewayInterface
         return $this->createRequest(VoidRequest::class, $options);
     }
 
+    public function getTestUrl()
+    {
+        if(str_starts_with( $this->getUsername(), 'PM')) {
+            return self::EU_TEST_KUSTOM_BASE_URL;
+        } else {
+            return self::EU_TEST_BASE_URL;
+        }
+    }
+
+    public function getBaseUrl()
+    {
+        if(str_starts_with( $this->getUsername(), 'M')) {
+            return self::EU_KUSTOM_BASE_URL;
+        } else {
+            return self::EU_BASE_URL;
+        }
+    }
+
     private function setBaseUrl()
     {
         if (self::API_VERSION_EUROPE === $this->getApiRegion()) {
-            if(str_starts_with('M', $this->getUsername())) {
-                $this->parameters->set('base_url', $this->getTestMode() ? self::EU_TEST_BASE_URL : self::EU_KUSTOM_URL);
-            } else {
-                $this->parameters->set('base_url', $this->getTestMode() ? self::EU_TEST_BASE_URL : self::EU_BASE_URL);
-            }
-
+            $this->parameters->set('base_url', $this->getTestMode() ? $this->getTestUrl() : $this->getBaseUrl());
             return;
         }
 
